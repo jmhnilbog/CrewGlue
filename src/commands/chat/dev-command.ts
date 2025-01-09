@@ -19,6 +19,7 @@ export class DevCommand implements Command {
     public deferType = CommandDeferType.HIDDEN;
     public requireClientPerms: PermissionsString[] = [];
     public async execute(intr: ChatInputCommandInteraction, data: EventData): Promise<void> {
+        console.log('intr.user', intr.user);
         if (!Config.developers.includes(intr.user.id)) {
             await InteractionUtils.send(intr, Lang.getEmbed('validationEmbeds.devOnly', data.lang));
             return;

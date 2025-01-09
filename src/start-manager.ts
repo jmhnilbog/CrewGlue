@@ -73,7 +73,6 @@ async function start(): Promise<void> {
     let rootController = new RootController();
     let api = new Api([guildsController, shardsController, rootController]);
 
-    // Start
     await manager.start();
     await api.start();
     if (Config.clustering.enabled) {
