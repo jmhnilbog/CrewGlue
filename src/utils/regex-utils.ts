@@ -1,8 +1,8 @@
 export class RegexUtils {
-    public static regex(input: string): RegExp {
+    public static regex(input: string): RegExp | null {
         let match = input.match(/^\/(.*)\/([^/]*)$/);
         if (!match) {
-            return;
+            return null;
         }
 
         return new RegExp(match[1], match[2]);
@@ -13,10 +13,12 @@ export class RegexUtils {
     }
 
     public static discordId(input: string): string {
-        return input?.match(/\b\d{17,20}\b/)?.[0];
+        return input.match(/\b\d{17,20}\b/)?.[0] || '';
     }
 
-    public static tag(input: string): { username: string; tag: string; discriminator: string } {
+    public static tag(
+        input: string
+    ): { username: string; tag: string; discriminator: string } | undefined {
         let match = input.match(/\b(.+)#([\d]{4})\b/);
         if (!match) {
             return;

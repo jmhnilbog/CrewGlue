@@ -12,11 +12,13 @@ import {
 export class Callback {
     @IsDefined()
     @IsUrl({ require_tld: false })
+    // @ts-expect-errore enums suck
     url: string;
 
     @IsDefined()
     @IsString()
     @Length(5, 2000)
+    // @ts-expect-errore enums suck
     token: string;
 }
 
@@ -24,11 +26,13 @@ export class RegisterClusterRequest {
     @IsDefined()
     @IsInt()
     @IsPositive()
+    // @ts-expect-errore enums suck
     shardCount: number;
 
     @IsDefined()
     @ValidateNested()
     @Type(() => Callback)
+    // @ts-expect-errore enums suck
     callback: Callback;
 }
 

@@ -48,7 +48,10 @@ export class CommandHandler implements EventHandler {
         let commandName = commandParts.join(' ');
 
         // Try to find the command the user wants
-        let command = CommandUtils.findCommand(this.commands, commandParts);
+        let command = CommandUtils.findCommand(
+            this.commands,
+            commandParts.filter(Boolean) as string[]
+        );
         if (!command) {
             Logger.error(
                 Logs.error.commandNotFound
@@ -129,8 +132,8 @@ export class CommandHandler implements EventHandler {
         // Get data from database
         let data = await this.eventDataService.create({
             user: intr.user,
-            channel: intr.channel,
-            guild: intr.guild,
+            channel: intr.channel || undefined,
+            guild: intr.guild || undefined,
             args: intr instanceof ChatInputCommandInteraction ? intr.options : undefined,
         });
 

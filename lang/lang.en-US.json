@@ -183,10 +183,10 @@
     },
     "refs": {
         "meta": {
-            "translators": "[TranslatorName#1234](https://github.com/)"
+            "translators": "[NONE]"
         },
         "bot": {
-            "description": "{{REF:links.templateEmbed}} helps give developers a starting point for new Discord bots, so that much of the initial setup can be avoided and developers can instead focus on meaningful bot features."
+            "description": "{{REF:links.templateEmbed}} sets up and allows for easy coordination of film crews via Discord."
         },
         "chatCommands": {
             "dev": "dev",

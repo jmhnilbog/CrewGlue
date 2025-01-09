@@ -54,8 +54,10 @@ export class Bot {
 
     private registerListeners(): void {
         this.client.on(Events.ClientReady, () => this.onReady());
-        this.client.on(Events.ShardReady, (shardId: number, unavailableGuilds: Set<string>) =>
-            this.onShardReady(shardId, unavailableGuilds)
+        this.client.on(
+            Events.ShardReady,
+            (shardId: number, unavailableGuilds: Set<string> | undefined) =>
+                this.onShardReady(shardId, unavailableGuilds)
         );
         this.client.on(Events.GuildCreate, (guild: Guild) => this.onGuildJoin(guild));
         this.client.on(Events.GuildDelete, (guild: Guild) => this.onGuildLeave(guild));
@@ -92,7 +94,7 @@ export class Bot {
         Logger.info(Logs.info.clientReady);
     }
 
-    private onShardReady(shardId: number, _unavailableGuilds: Set<string>): void {
+    private onShardReady(shardId: number, _unavailableGuilds?: Set<string>): void {
         Logger.setShardId(shardId);
     }
 
@@ -129,12 +131,12 @@ export class Bot {
         }
 
         try {
-            msg = await PartialUtils.fillMessage(msg);
-            if (!msg) {
+            const m = await PartialUtils.fillMessage(msg);
+            if (!m) {
                 return;
             }
 
-            await this.messageHandler.process(msg);
+            await this.messageHandler.process(m);
         } catch (error) {
             Logger.error(Logs.error.message, error);
         }
@@ -175,21 +177,17 @@ export class Bot {
         }
 
         try {
-            msgReaction = await PartialUtils.fillReaction(msgReaction);
-            if (!msgReaction) {
+            let mr = await PartialUtils.fillReaction(msgReaction);
+            if (!mr) {
                 return;
             }
 
-            reactor = await PartialUtils.fillUser(reactor);
-            if (!reactor) {
+            let r = await PartialUtils.fillUser(reactor);
+            if (!r) {
                 return;
             }
 
-            await this.reactionHandler.process(
-                msgReaction,
-                msgReaction.message as Message,
-                reactor
-            );
+            await this.reactionHandler.process(mr, msgReaction.message as Message, r);
         } catch (error) {
             Logger.error(Logs.error.reaction, error);
         }

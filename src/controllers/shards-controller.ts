@@ -73,6 +73,7 @@ export class ShardsController implements Controller {
                 let customClient = client as CustomClient;
                 return customClient.setPresence(context.type, context.name, context.url);
             },
+            // @ts-expect-error enum wackiness
             { context: { type: ActivityType[reqBody.type], name: reqBody.name, url: reqBody.url } }
         );
 

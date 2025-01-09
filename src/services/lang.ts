@@ -5,6 +5,9 @@ import { fileURLToPath } from 'node:url';
 
 import { Language } from '../models/enum-helpers/index.js';
 
+/**
+ * Internationalization service.
+ */
 export class Lang {
     private static linguini = new Linguini(
         path.resolve(dirname(fileURLToPath(import.meta.url)), '../../lang'),
@@ -44,7 +47,7 @@ export class Lang {
         location: string,
         variables?: { [name: string]: string }
     ): LocalizationMap {
-        let obj = {};
+        let obj = {} as LocalizationMap;
         for (let langCode of Language.Enabled) {
             obj[langCode] = this.getRef(location, langCode, variables);
         }
@@ -64,11 +67,13 @@ export class Lang {
                 url: jsonValue.thumbnail,
             },
             description: Utils.join(jsonValue.description, '\n'),
-            fields: jsonValue.fields?.map(field => ({
-                name: Utils.join(field.name, '\n'),
-                value: Utils.join(field.value, '\n'),
-                inline: field.inline ? field.inline : false,
-            })),
+            fields: jsonValue.fields?.map(
+                (field: { name: string; value: string; inline?: string }) => ({
+                    name: Utils.join(field.name, '\n'),
+                    value: Utils.join(field.value, '\n'),
+                    inline: field.inline ? field.inline : false,
+                })
+            ),
             image: {
                 url: jsonValue.image,
             },

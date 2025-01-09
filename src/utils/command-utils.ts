@@ -15,7 +15,7 @@ import { Lang } from '../services/index.js';
 export class CommandUtils {
     public static findCommand(commands: Command[], commandParts: string[]): Command {
         let found = [...commands];
-        let closestMatch: Command;
+        let closestMatch: Command = commands[0];
         for (let [index, commandPart] of commandParts.entries()) {
             found = found.filter(command => command.names[index] === commandPart);
             if (found.length === 0) {
@@ -53,19 +53,23 @@ export class CommandUtils {
             }
         }
 
-        if (
-            (intr.channel instanceof GuildChannel || intr.channel instanceof ThreadChannel) &&
-            !intr.channel.permissionsFor(intr.client.user).has(command.requireClientPerms)
-        ) {
-            await InteractionUtils.send(
-                intr,
-                Lang.getEmbed('validationEmbeds.missingClientPerms', data.lang, {
-                    PERMISSIONS: command.requireClientPerms
-                        .map(perm => `**${Permission.Data[perm].displayName(data.lang)}**`)
-                        .join(', '),
-                })
-            );
-            return false;
+        if (intr.channel instanceof GuildChannel || intr.channel instanceof ThreadChannel) {
+            const user = intr.client.user;
+            const permissions = intr.channel.permissionsFor(user);
+
+            if (!permissions?.has(command.requireClientPerms)) {
+                await InteractionUtils.send(
+                    intr,
+                    Lang.getEmbed('validationEmbeds.missingClientPerms', data.lang, {
+                        PERMISSIONS: command.requireClientPerms
+                            .map(perm => `**${Permission.Data[perm].displayName(data.lang)}**`)
+                            .join(', '),
+                    })
+                );
+                return false;
+            }
+
+            return true;
         }
 
         return true;

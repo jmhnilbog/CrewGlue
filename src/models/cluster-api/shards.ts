@@ -21,14 +21,17 @@ export interface ShardInfo {
 export class SetShardPresencesRequest {
     @IsDefined()
     @IsEnum(ActivityType)
+    // @ts-expect-errore enums suck
     type: string;
 
     @IsDefined()
     @IsString()
     @Length(1, 128)
+    // @ts-expect-errore enums suck
     name: string;
 
     @IsDefined()
     @IsUrl()
+    // @ts-expect-errore enums suck
     url: string;
 }

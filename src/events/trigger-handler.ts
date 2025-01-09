@@ -44,12 +44,17 @@ export class TriggerHandler {
             return;
         }
 
-        // Get data from database
-        let data = await this.eventDataService.create({
+        const arg = {
             user: msg.author,
             channel: msg.channel,
-            guild: msg.guild,
-        });
+        } as any;
+
+        if (msg.guild !== null) {
+            arg.guild = msg.guild;
+        }
+
+        // Get data from database
+        let data = await this.eventDataService.create(arg);
 
         // Execute triggers
         for (let trigger of triggers) {

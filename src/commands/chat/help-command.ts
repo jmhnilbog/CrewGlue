@@ -7,6 +7,9 @@ import { Lang } from '../../services/index.js';
 import { ClientUtils, FormatUtils, InteractionUtils } from '../../utils/index.js';
 import { Command, CommandDeferType } from '../index.js';
 
+/**
+ *
+ */
 export class HelpCommand implements Command {
     public names = [Lang.getRef('chatCommands.help', Language.Default)];
     public deferType = CommandDeferType.HIDDEN;

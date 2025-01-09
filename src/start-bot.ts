@@ -41,10 +41,15 @@ async function start(): Promise<void> {
     // Services
     let eventDataService = new EventDataService();
 
+    const partials = (Config.client.partials as string[]).map(
+        p => Partials[p as unknown as number]
+    );
+
     // Client
     let client = new CustomClient({
         intents: Config.client.intents,
-        partials: (Config.client.partials as string[]).map(partial => Partials[partial]),
+        // @ts-expect-error enum craziness
+        partials: partials,
         makeCache: Options.cacheWithLimits({
             // Keep default caching behavior
             ...Options.DefaultMakeCacheSettings,

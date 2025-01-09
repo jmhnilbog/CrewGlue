@@ -33,7 +33,7 @@ export class ReactionHandler implements EventHandler {
         }
 
         // Try to find the reaction the user wants
-        let reaction = this.findReaction(msgReaction.emoji.name);
+        let reaction = this.findReaction(msgReaction?.emoji.name || '');
         if (!reaction) {
             return;
         }
@@ -51,18 +51,23 @@ export class ReactionHandler implements EventHandler {
             return;
         }
 
-        // Get data from database
-        let data = await this.eventDataService.create({
+        const arg = {
             user: reactor,
             channel: msg.channel,
-            guild: msg.guild,
-        });
+        } as any;
+
+        if (msg.guild !== null) {
+            arg.guild = msg.guild;
+        }
+
+        // Get data from database
+        let data = await this.eventDataService.create(arg);
 
         // Execute the reaction
         await reaction.execute(msgReaction, msg, reactor, data);
     }
 
-    private findReaction(emoji: string): Reaction {
-        return this.reactions.find(reaction => reaction.emoji === emoji);
+    private findReaction(emoji: string): Reaction | null {
+        return this.reactions.find(reaction => reaction.emoji === emoji) || null;
     }
 }
